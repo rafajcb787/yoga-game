@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Desk Yoga Break</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-0: #070c17;
+      --bg-1: #0f1a2b;
+      --bg-2: #15243a;
+      --text: #eef4ff;
+      --muted: #9eacc4;
+      --accent: #9debc8;
+      --accent-soft: rgba(157, 235, 200, 0.25);
+      --gold: #e8d8a9;
+      --card: rgba(10, 18, 31, 0.72);
+      --border: rgba(255, 255, 255, 0.12);
+      --shadow: 0 24px 80px rgba(0,0,0,0.45);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 20% 0%, rgba(157, 235, 200, 0.08), transparent 50%),
+                  radial-gradient(circle at 80% 0%, rgba(232, 216, 169, 0.09), transparent 42%),
+                  linear-gradient(145deg, var(--bg-0), var(--bg-1) 40%, var(--bg-2));
+      overflow: hidden;
+    }
+
+    .ambient {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(157, 235, 200, 0.04), transparent, rgba(232, 216, 169, 0.04));
+      filter: blur(8px);
+      animation: drift 16s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift {
+      from { transform: translateX(-3%) translateY(-2%) scale(1); }
+      to { transform: translateX(3%) translateY(2%) scale(1.04); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+    }
+
+    .app {
+      width: min(920px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 4vw, 44px);
+    }
+
+    .screen {
+      display: none;
+      animation: fadeUp 420ms ease;
+    }
+
+    .screen.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    .eyebrow {
+      color: var(--gold);
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .title {
+      font-size: clamp(2rem, 4.6vw, 3rem);
+      font-weight: 600;
+      line-height: 1.1;
+      max-width: 14ch;
+      margin-bottom: 16px;
+    }
+
+    .tagline, .affirmation {
+      color: var(--muted);
+      font-size: clamp(1rem, 1.5vw, 1.1rem);
+      line-height: 1.7;
+      max-width: 52ch;
+      margin-bottom: 32px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 28px;
+      font-size: 0.97rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #081523;
+      background: linear-gradient(135deg, var(--accent), #d6f8e8);
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+      box-shadow: 0 10px 24px rgba(157, 235, 200, 0.28);
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .pose-meta h2 {
+      font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .instruction {
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 50ch;
+    }
+
+    .timer {
+      font-size: clamp(2.1rem, 4.5vw, 3rem);
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+      min-width: 5ch;
+      text-align: right;
+    }
+
+    .canvas-wrap {
+      background: rgba(8, 14, 24, 0.58);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: clamp(16px, 3vw, 28px);
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+      margin-bottom: 20px;
+    }
+
+    svg {
+      width: min(450px, 100%);
+      height: auto;
+      overflow: visible;
+    }
+
+    .line {
+      stroke: #c6d4ea;
+      stroke-width: 6;
+      stroke-linecap: round;
+      fill: none;
+      opacity: 0.95;
+      animation: sway 4.2s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    .line.accent {
+      stroke: var(--accent);
+      filter: drop-shadow(0 0 10px rgba(157, 235, 200, 0.35));
+    }
+
+    .head {
+      stroke: #dfe7f5;
+      stroke-width: 6;
+      fill: rgba(223, 231, 245, 0.06);
+      animation: breatheHead 3.8s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-2px) rotate(1.2deg); }
+    }
+
+    @keyframes breatheHead {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    .progress-track {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-soft), var(--accent));
+      transition: width 500ms cubic-bezier(.22,.61,.36,1);
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pose-count { color: var(--muted); }
+
+    .breath {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      border: 1px solid rgba(157, 235, 200, 0.7);
+      background: radial-gradient(circle, rgba(157, 235, 200, 0.34), rgba(157, 235, 200, 0.08));
+      box-shadow: 0 0 0 0 rgba(157, 235, 200, 0.28);
+      animation: pulse 8s ease-in-out infinite;
+      position: relative;
+    }
+
+    .breath::after {
+      content: attr(data-phase);
+      position: absolute;
+      top: 62px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--muted);
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.84); box-shadow: 0 0 0 0 rgba(157, 235, 200, 0.18); }
+      30%, 45% { transform: scale(1.15); box-shadow: 0 0 0 18px rgba(157, 235, 200, 0); }
+      70% { transform: scale(0.9); box-shadow: 0 0 0 6px rgba(157, 235, 200, 0.12); }
+    }
+
+    .center { text-align: center; }
+
+    @media (max-width: 700px) {
+      .app { border-radius: 22px; }
+      .top-row { align-items: flex-start; }
+      .timer { text-align: left; }
+      .status-row { justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+  <main class="container">
+    <section class="app">
+      <div id="start-screen" class="screen active">
+        <p class="eyebrow">Executive Reset</p>
+        <h1 class="title">Return to your day with calm, focus, and better posture.</h1>
+        <p class="tagline">In just a few mindful minutes, release screen tension, open your breath, and bring steady energy back to your workflow.</p>
+        <button class="btn" id="start-btn">Start Your Break</button>
+      </div>
+
+      <div id="pose-screen" class="screen">
+        <div class="top-row">
+          <div class="pose-meta">
+            <p class="eyebrow">Guided Desk Flow</p>
+            <h2 id="pose-name"></h2>
+            <p id="pose-instruction" class="instruction"></p>
+          </div>
+          <div id="timer" class="timer" aria-live="polite">00:00</div>
+        </div>
+
+        <div class="canvas-wrap">
+          <svg id="pose-figure" viewBox="0 0 360 230" role="img" aria-label="Yoga pose illustration"></svg>
+          <div class="breath" id="breath-indicator" data-phase="Inhale"></div>
+        </div>
+
+        <div class="progress-track" aria-label="Session progress">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <div class="status-row">
+          <span id="pose-count" class="pose-count"></span>
+        </div>
+      </div>
+
+      <div id="end-screen" class="screen center">
+        <p class="eyebrow">Session Complete</p>
+        <h2 class="title" style="max-width:none;">You are reset.</h2>
+        <p class="affirmation">Carry this slower breath and lifted posture into your next meeting. Calm is now part of your momentum.</p>
+        <button class="btn" id="restart-btn">Begin Again</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const poses = [
+      {
+        name: 'Neck Rolls',
+        duration: 40,
+        instruction: 'Sit tall and slowly roll your chin from shoulder to shoulder. Keep movement smooth and unforced.',
+        svg: `
+          <line class="line" x1="180" y1="58" x2="180" y2="130"/>
+          <line class="line" x1="180" y1="86" x2="132" y2="118"/>
+          <line class="line" x1="180" y1="86" x2="230" y2="116"/>
+          <line class="line" x1="180" y1="130" x2="150" y2="186"/>
+          <line class="line" x1="180" y1="130" x2="210" y2="186"/>
+          <ellipse class="line accent" cx="178" cy="58" rx="20" ry="11"/>
+          <circle class="head" cx="180" cy="38" r="18"/>
+          <line class="line accent" x1="126" y1="188" x2="234" y2="188"/>
+        `
+      },
+      {
+        name: 'Seated Spinal Twist',
+        duration: 45,
+        instruction: 'Plant both feet, lengthen your spine, then gently rotate your torso to one side. Keep shoulders relaxed.',
+        svg: `
+          <line class="line" x1="180" y1="56" x2="180" y2="132"/>
+          <line class="line accent" x1="180" y1="88" x2="136" y2="104"/>
+          <line class="line" x1="180" y1="88" x2="228" y2="116"/>
+          <line class="line" x1="180" y1="132" x2="162" y2="184"/>
+          <line class="line" x1="180" y1="132" x2="214" y2="180"/>
+          <line class="line accent" x1="112" y1="178" x2="246" y2="178"/>
+          <circle class="head" cx="180" cy="36" r="18"/>
+        `
+      },
+      {
+        name: 'Wrist Release',
+        duration: 35,
+        instruction: 'Extend one arm forward with palm out. Use the other hand to softly draw fingers back and breathe into the forearm.',
+        svg: `
+          <line class="line" x1="180" y1="56" x2="180" y2="136"/>
+          <line class="line accent" x1="180" y1="90" x2="110" y2="84"/>
+          <line class="line" x1="180" y1="90" x2="238" y2="118"/>
+          <line class="line" x1="180" y1="136" x2="160" y2="188"/>
+          <line class="line" x1="180" y1="136" x2="210" y2="188"/>
+          <line class="line accent" x1="104" y1="84" x2="90" y2="60"/>
+          <circle class="head" cx="180" cy="36" r="18"/>
+          <line class="line" x1="132" y1="190" x2="232" y2="190"/>
+        `
+      },
+      {
+        name: 'Chair Pigeon',
+        duration: 50,
+        instruction: 'Cross one ankle over the opposite knee. Hinge forward with a long spine until you feel a gentle hip stretch.',
+        svg: `
+          <line class="line" x1="176" y1="54" x2="176" y2="120"/>
+          <line class="line" x1="176" y1="84" x2="130" y2="112"/>
+          <line class="line" x1="176" y1="84" x2="224" y2="112"/>
+          <line class="line" x1="176" y1="120" x2="214" y2="146"/>
+          <line class="line accent" x1="214" y1="146" x2="148" y2="150"/>
+          <line class="line" x1="176" y1="120" x2="156" y2="182"/>
+          <line class="line accent" x1="110" y1="184" x2="246" y2="184"/>
+          <circle class="head" cx="176" cy="36" r="18"/>
+        `
+      },
+      {
+        name: 'Seated Cat-Cow',
+        duration: 40,
+        instruction: 'Hands on knees. Inhale to lift your chest, exhale to round gently through the upper back.',
+        svg: `
+          <path class="line accent" d="M130 130 Q178 104 230 132"/>
+          <line class="line" x1="178" y1="60" x2="178" y2="118"/>
+          <line class="line" x1="178" y1="86" x2="136" y2="120"/>
+          <line class="line" x1="178" y1="86" x2="224" y2="118"/>
+          <line class="line" x1="160" y1="132" x2="148" y2="182"/>
+          <line class="line" x1="200" y1="132" x2="214" y2="182"/>
+          <line class="line" x1="116" y1="184" x2="244" y2="184"/>
+          <circle class="head" cx="178" cy="40" r="18"/>
+        `
+      },
+      {
+        name: 'Desk Chest Opener',
+        duration: 45,
+        instruction: 'Clasp hands behind your back or at your chair. Draw shoulders down, open the chest, and breathe slowly.',
+        svg: `
+          <line class="line" x1="180" y1="56" x2="180" y2="132"/>
+          <line class="line accent" x1="180" y1="90" x2="142" y2="126"/>
+          <line class="line accent" x1="180" y1="90" x2="218" y2="126"/>
+          <line class="line" x1="180" y1="132" x2="158" y2="184"/>
+          <line class="line" x1="180" y1="132" x2="206" y2="184"/>
+          <path class="line accent" d="M142 126 Q180 152 218 126"/>
+          <line class="line" x1="124" y1="186" x2="236" y2="186"/>
+          <circle class="head" cx="180" cy="36" r="18"/>
+        `
+      }
+    ];
+
+    const screens = {
+      start: document.getElementById('start-screen'),
+      pose: document.getElementById('pose-screen'),
+      end: document.getElementById('end-screen')
+    };
+
+    const poseName = document.getElementById('pose-name');
+    const poseInstruction = document.getElementById('pose-instruction');
+    const poseFigure = document.getElementById('pose-figure');
+    const poseCount = document.getElementById('pose-count');
+    const timerEl = document.getElementById('timer');
+    const progressFill = document.getElementById('progress-fill');
+    const breathIndicator = document.getElementById('breath-indicator');
+    const startBtn = document.getElementById('start-btn');
+    const restartBtn = document.getElementById('restart-btn');
+
+    let poseIndex = 0;
+    let remaining = poses[0].duration;
+    let tickId;
+    let breathId;
+
+    function showScreen(key) {
+      Object.values(screens).forEach(s => s.classList.remove('active'));
+      screens[key].classList.add('active');
+    }
+
+    function formatTime(totalSec) {
+      const m = Math.floor(totalSec / 60).toString().padStart(2, '0');
+      const s = (totalSec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function playChime() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const now = ctx.currentTime;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.14, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+      gain.connect(ctx.destination);
+
+      [587.33, 783.99].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.06);
+        osc.connect(gain);
+        osc.start(now + i * 0.06);
+        osc.stop(now + 1.1 + i * 0.06);
+      });
+
+      setTimeout(() => ctx.close(), 1700);
+    }
+
+    function renderPose() {
+      const pose = poses[poseIndex];
+      poseName.textContent = pose.name;
+      poseInstruction.textContent = pose.instruction;
+      poseFigure.innerHTML = pose.svg;
+      poseCount.textContent = `Pose ${poseIndex + 1} of ${poses.length}`;
+      timerEl.textContent = formatTime(remaining);
+      const sessionProgress = (poseIndex / poses.length) * 100;
+      progressFill.style.width = `${sessionProgress}%`;
+    }
+
+    function startBreathCycle() {
+      clearInterval(breathId);
+      let inhale = true;
+      breathIndicator.dataset.phase = 'Inhale';
+      breathId = setInterval(() => {
+        inhale = !inhale;
+        breathIndicator.dataset.phase = inhale ? 'Inhale' : 'Exhale';
+      }, 4000);
+    }
+
+    function nextPose() {
+      poseIndex += 1;
+      if (poseIndex >= poses.length) {
+        clearInterval(tickId);
+        clearInterval(breathId);
+        progressFill.style.width = '100%';
+        showScreen('end');
+        playChime();
+        return;
+      }
+      remaining = poses[poseIndex].duration;
+      renderPose();
+      playChime();
+    }
+
+    function startSession() {
+      poseIndex = 0;
+      remaining = poses[0].duration;
+      showScreen('pose');
+      renderPose();
+      startBreathCycle();
+      playChime();
+
+      clearInterval(tickId);
+      tickId = setInterval(() => {
+        remaining -= 1;
+        timerEl.textContent = formatTime(Math.max(remaining, 0));
+        if (remaining <= 0) {
+          nextPose();
+        }
+      }, 1000);
+    }
+
+    startBtn.addEventListener('click', startSession);
+    restartBtn.addEventListener('click', startSession);
+  </script>
+</body>
+</html>
