@@ -59,7 +59,7 @@
     }
 
     .app {
-      width: min(920px, 100%);
+      width: min(980px, 100%);
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 28px;
@@ -68,11 +68,7 @@
       padding: clamp(24px, 4vw, 44px);
     }
 
-    .screen {
-      display: none;
-      animation: fadeUp 420ms ease;
-    }
-
+    .screen { display: none; animation: fadeUp 420ms ease; }
     .screen.active { display: block; }
 
     @keyframes fadeUp {
@@ -95,7 +91,7 @@
       font-size: clamp(2rem, 4.6vw, 3rem);
       font-weight: 600;
       line-height: 1.1;
-      max-width: 14ch;
+      max-width: 15ch;
       margin-bottom: 16px;
     }
 
@@ -103,15 +99,31 @@
       color: var(--muted);
       font-size: clamp(1rem, 1.5vw, 1.1rem);
       line-height: 1.7;
-      max-width: 52ch;
-      margin-bottom: 32px;
+      max-width: 56ch;
+      margin-bottom: 24px;
+    }
+
+    .quick-facts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+
+    .fact {
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: var(--muted);
+      background: rgba(6, 13, 24, 0.45);
+      font-size: 0.92rem;
     }
 
     .btn {
       border: 0;
       border-radius: 999px;
-      padding: 14px 28px;
-      font-size: 0.97rem;
+      padding: 12px 22px;
+      font-size: 0.95rem;
       font-weight: 600;
       letter-spacing: 0.04em;
       color: #081523;
@@ -131,14 +143,15 @@
       box-shadow: none;
     }
 
-    .top-row {
+    .top-row, .status-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
     }
+
+    .top-row { margin-bottom: 16px; }
 
     .pose-meta h2 {
       font-size: clamp(1.6rem, 3.2vw, 2.1rem);
@@ -146,19 +159,39 @@
       margin-bottom: 8px;
     }
 
-    .instruction {
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 50ch;
-    }
+    .instruction { color: var(--muted); line-height: 1.6; max-width: 54ch; }
 
     .timer {
-      font-size: clamp(2.1rem, 4.5vw, 3rem);
+      font-size: clamp(2rem, 4.5vw, 3rem);
       font-weight: 300;
       letter-spacing: 0.06em;
       color: var(--gold);
       min-width: 5ch;
       text-align: right;
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+      gap: 10px;
+      margin: 14px 0 18px;
+    }
+
+    .hud-card {
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(4, 10, 19, 0.5);
+    }
+
+    .hud-label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .hud-value { font-size: 1.06rem; font-weight: 600; margin-top: 4px; }
+
+    .focus-event {
+      margin-bottom: 14px;
+      color: var(--gold);
+      font-size: 0.92rem;
+      min-height: 1.4rem;
     }
 
     .canvas-wrap {
@@ -169,14 +202,10 @@
       display: grid;
       gap: 18px;
       justify-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
-    svg {
-      width: min(450px, 100%);
-      height: auto;
-      overflow: visible;
-    }
+    svg { width: min(450px, 100%); height: auto; overflow: visible; }
 
     .line {
       stroke: #c6d4ea;
@@ -188,10 +217,7 @@
       transform-origin: center;
     }
 
-    .line.accent {
-      stroke: var(--accent);
-      filter: drop-shadow(0 0 10px rgba(157, 235, 200, 0.35));
-    }
+    .line.accent { stroke: var(--accent); filter: drop-shadow(0 0 10px rgba(157, 235, 200, 0.35)); }
 
     .head {
       stroke: #dfe7f5;
@@ -210,37 +236,6 @@
       0%,100% { transform: scale(1); }
       50% { transform: scale(1.04); }
     }
-
-    .progress-track {
-      height: 7px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent-soft), var(--accent));
-      transition: width 500ms cubic-bezier(.22,.61,.36,1);
-    }
-
-    .status-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .controls {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .pose-count { color: var(--muted); }
 
     .breath {
       width: 56px;
@@ -272,6 +267,31 @@
       70% { transform: scale(0.9); box-shadow: 0 0 0 6px rgba(157, 235, 200, 0.12); }
     }
 
+    .progress-track {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-soft), var(--accent));
+      transition: width 500ms cubic-bezier(.22,.61,.36,1);
+    }
+
+    .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .pose-count { color: var(--muted); }
+
+    .achievement-strip {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      min-height: 1.35rem;
+    }
+
     .center { text-align: center; }
 
     .sr-only {
@@ -296,9 +316,7 @@
 
     @media (max-width: 700px) {
       .app { border-radius: 22px; }
-      .top-row { align-items: flex-start; }
       .timer { text-align: left; }
-      .status-row { justify-content: space-between; }
     }
   </style>
 </head>
@@ -307,10 +325,16 @@
   <main class="container">
     <section class="app">
       <div id="start-screen" class="screen active">
-        <p class="eyebrow">Executive Reset</p>
-        <h1 class="title">Return to your day with calm, focus, and better posture.</h1>
-        <p class="tagline">In just a few mindful minutes, release screen tension, open your breath, and bring steady energy back to your workflow.</p>
-        <button class="btn" id="start-btn">Start Your Break</button>
+        <p class="eyebrow">Corporate Calm League</p>
+        <h1 class="title">Turn your desk break into a focus game.</h1>
+        <p class="tagline">Build streaks, earn skip credits, unlock calm badges, and finish meetings with better posture and sharper attention.</p>
+        <div class="quick-facts">
+          <div class="fact">🎯 Score points every second you stay present.</div>
+          <div class="fact">🔥 Keep streaks for bonus multipliers.</div>
+          <div class="fact">⏭️ Earn skip tokens for strategic flexibility.</div>
+          <div class="fact">🏅 Beat your best score each day.</div>
+        </div>
+        <button class="btn" id="start-btn">Start Focus Run</button>
       </div>
 
       <div id="pose-screen" class="screen">
@@ -323,6 +347,16 @@
           <div id="timer" class="timer" aria-live="polite">00:00</div>
         </div>
 
+        <div class="hud">
+          <div class="hud-card"><div class="hud-label">Score</div><div class="hud-value" id="score-value">0</div></div>
+          <div class="hud-card"><div class="hud-label">Streak</div><div class="hud-value" id="streak-value">x1</div></div>
+          <div class="hud-card"><div class="hud-label">Level</div><div class="hud-value" id="level-value">1</div></div>
+          <div class="hud-card"><div class="hud-label">Skip Tokens</div><div class="hud-value" id="skip-value">2</div></div>
+          <div class="hud-card"><div class="hud-label">Best Score</div><div class="hud-value" id="best-value">0</div></div>
+        </div>
+
+        <div id="focus-event" class="focus-event" aria-live="polite"></div>
+
         <div class="canvas-wrap">
           <svg id="pose-figure" viewBox="0 0 360 230" role="img" aria-label="Yoga pose illustration"></svg>
           <div class="breath" id="breath-indicator" data-phase="Inhale"></div>
@@ -331,115 +365,43 @@
         <div class="progress-track" aria-label="Session progress">
           <div id="progress-fill" class="progress-fill"></div>
         </div>
+
         <div class="status-row">
           <span id="pose-count" class="pose-count"></span>
           <div class="controls">
             <button type="button" class="btn secondary" id="pause-btn" aria-pressed="false">Pause</button>
+            <button type="button" class="btn secondary" id="skip-btn">Use Skip</button>
           </div>
         </div>
+
+        <p id="achievement-strip" class="achievement-strip"></p>
         <p id="live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></p>
       </div>
 
       <div id="end-screen" class="screen center">
-        <p class="eyebrow">Session Complete</p>
-        <h2 class="title" style="max-width:none;">You are reset.</h2>
-        <p class="affirmation">Carry this slower breath and lifted posture into your next meeting. Calm is now part of your momentum.</p>
-        <button class="btn" id="restart-btn">Begin Again</button>
+        <p class="eyebrow">Run Complete</p>
+        <h2 class="title" style="max-width:none;">Great reset. Strong finish.</h2>
+        <p class="affirmation" id="final-summary">You are reset.</p>
+        <button class="btn" id="restart-btn">Play Another Focus Run</button>
       </div>
     </section>
   </main>
 
   <script>
     const poses = [
-      {
-        name: 'Neck Rolls',
-        duration: 40,
-        instruction: 'Sit tall and slowly roll your chin from shoulder to shoulder. Keep movement smooth and unforced.',
-        svg: `
-          <line class="line" x1="180" y1="58" x2="180" y2="130"/>
-          <line class="line" x1="180" y1="86" x2="132" y2="118"/>
-          <line class="line" x1="180" y1="86" x2="230" y2="116"/>
-          <line class="line" x1="180" y1="130" x2="150" y2="186"/>
-          <line class="line" x1="180" y1="130" x2="210" y2="186"/>
-          <ellipse class="line accent" cx="178" cy="58" rx="20" ry="11"/>
-          <circle class="head" cx="180" cy="38" r="18"/>
-          <line class="line accent" x1="126" y1="188" x2="234" y2="188"/>
-        `
-      },
-      {
-        name: 'Seated Spinal Twist',
-        duration: 45,
-        instruction: 'Plant both feet, lengthen your spine, then gently rotate your torso to one side. Keep shoulders relaxed.',
-        svg: `
-          <line class="line" x1="180" y1="56" x2="180" y2="132"/>
-          <line class="line accent" x1="180" y1="88" x2="136" y2="104"/>
-          <line class="line" x1="180" y1="88" x2="228" y2="116"/>
-          <line class="line" x1="180" y1="132" x2="162" y2="184"/>
-          <line class="line" x1="180" y1="132" x2="214" y2="180"/>
-          <line class="line accent" x1="112" y1="178" x2="246" y2="178"/>
-          <circle class="head" cx="180" cy="36" r="18"/>
-        `
-      },
-      {
-        name: 'Wrist Release',
-        duration: 35,
-        instruction: 'Extend one arm forward with palm out. Use the other hand to softly draw fingers back and breathe into the forearm.',
-        svg: `
-          <line class="line" x1="180" y1="56" x2="180" y2="136"/>
-          <line class="line accent" x1="180" y1="90" x2="110" y2="84"/>
-          <line class="line" x1="180" y1="90" x2="238" y2="118"/>
-          <line class="line" x1="180" y1="136" x2="160" y2="188"/>
-          <line class="line" x1="180" y1="136" x2="210" y2="188"/>
-          <line class="line accent" x1="104" y1="84" x2="90" y2="60"/>
-          <circle class="head" cx="180" cy="36" r="18"/>
-          <line class="line" x1="132" y1="190" x2="232" y2="190"/>
-        `
-      },
-      {
-        name: 'Chair Pigeon',
-        duration: 50,
-        instruction: 'Cross one ankle over the opposite knee. Hinge forward with a long spine until you feel a gentle hip stretch.',
-        svg: `
-          <line class="line" x1="176" y1="54" x2="176" y2="120"/>
-          <line class="line" x1="176" y1="84" x2="130" y2="112"/>
-          <line class="line" x1="176" y1="84" x2="224" y2="112"/>
-          <line class="line" x1="176" y1="120" x2="214" y2="146"/>
-          <line class="line accent" x1="214" y1="146" x2="148" y2="150"/>
-          <line class="line" x1="176" y1="120" x2="156" y2="182"/>
-          <line class="line accent" x1="110" y1="184" x2="246" y2="184"/>
-          <circle class="head" cx="176" cy="36" r="18"/>
-        `
-      },
-      {
-        name: 'Seated Cat-Cow',
-        duration: 40,
-        instruction: 'Hands on knees. Inhale to lift your chest, exhale to round gently through the upper back.',
-        svg: `
-          <path class="line accent" d="M130 130 Q178 104 230 132"/>
-          <line class="line" x1="178" y1="60" x2="178" y2="118"/>
-          <line class="line" x1="178" y1="86" x2="136" y2="120"/>
-          <line class="line" x1="178" y1="86" x2="224" y2="118"/>
-          <line class="line" x1="160" y1="132" x2="148" y2="182"/>
-          <line class="line" x1="200" y1="132" x2="214" y2="182"/>
-          <line class="line" x1="116" y1="184" x2="244" y2="184"/>
-          <circle class="head" cx="178" cy="40" r="18"/>
-        `
-      },
-      {
-        name: 'Desk Chest Opener',
-        duration: 45,
-        instruction: 'Clasp hands behind your back or at your chair. Draw shoulders down, open the chest, and breathe slowly.',
-        svg: `
-          <line class="line" x1="180" y1="56" x2="180" y2="132"/>
-          <line class="line accent" x1="180" y1="90" x2="142" y2="126"/>
-          <line class="line accent" x1="180" y1="90" x2="218" y2="126"/>
-          <line class="line" x1="180" y1="132" x2="158" y2="184"/>
-          <line class="line" x1="180" y1="132" x2="206" y2="184"/>
-          <path class="line accent" d="M142 126 Q180 152 218 126"/>
-          <line class="line" x1="124" y1="186" x2="236" y2="186"/>
-          <circle class="head" cx="180" cy="36" r="18"/>
-        `
-      }
+      { name: 'Neck Rolls', duration: 35, instruction: 'Sit tall and slowly roll your chin from shoulder to shoulder. Keep movement smooth and unforced.', svg: `<line class="line" x1="180" y1="58" x2="180" y2="130"/><line class="line" x1="180" y1="86" x2="132" y2="118"/><line class="line" x1="180" y1="86" x2="230" y2="116"/><line class="line" x1="180" y1="130" x2="150" y2="186"/><line class="line" x1="180" y1="130" x2="210" y2="186"/><ellipse class="line accent" cx="178" cy="58" rx="20" ry="11"/><circle class="head" cx="180" cy="38" r="18"/><line class="line accent" x1="126" y1="188" x2="234" y2="188"/>` },
+      { name: 'Seated Spinal Twist', duration: 40, instruction: 'Plant both feet, lengthen your spine, then gently rotate your torso to one side. Keep shoulders relaxed.', svg: `<line class="line" x1="180" y1="56" x2="180" y2="132"/><line class="line accent" x1="180" y1="88" x2="136" y2="104"/><line class="line" x1="180" y1="88" x2="228" y2="116"/><line class="line" x1="180" y1="132" x2="162" y2="184"/><line class="line" x1="180" y1="132" x2="214" y2="180"/><line class="line accent" x1="112" y1="178" x2="246" y2="178"/><circle class="head" cx="180" cy="36" r="18"/>` },
+      { name: 'Wrist Release', duration: 32, instruction: 'Extend one arm forward with palm out. Use the other hand to softly draw fingers back and breathe into the forearm.', svg: `<line class="line" x1="180" y1="56" x2="180" y2="136"/><line class="line accent" x1="180" y1="90" x2="110" y2="84"/><line class="line" x1="180" y1="90" x2="238" y2="118"/><line class="line" x1="180" y1="136" x2="160" y2="188"/><line class="line" x1="180" y1="136" x2="210" y2="188"/><line class="line accent" x1="104" y1="84" x2="90" y2="60"/><circle class="head" cx="180" cy="36" r="18"/><line class="line" x1="132" y1="190" x2="232" y2="190"/>` },
+      { name: 'Chair Pigeon', duration: 45, instruction: 'Cross one ankle over the opposite knee. Hinge forward with a long spine until you feel a gentle hip stretch.', svg: `<line class="line" x1="176" y1="54" x2="176" y2="120"/><line class="line" x1="176" y1="84" x2="130" y2="112"/><line class="line" x1="176" y1="84" x2="224" y2="112"/><line class="line" x1="176" y1="120" x2="214" y2="146"/><line class="line accent" x1="214" y1="146" x2="148" y2="150"/><line class="line" x1="176" y1="120" x2="156" y2="182"/><line class="line accent" x1="110" y1="184" x2="246" y2="184"/><circle class="head" cx="176" cy="36" r="18"/>` },
+      { name: 'Seated Cat-Cow', duration: 36, instruction: 'Hands on knees. Inhale to lift your chest, exhale to round gently through the upper back.', svg: `<path class="line accent" d="M130 130 Q178 104 230 132"/><line class="line" x1="178" y1="60" x2="178" y2="118"/><line class="line" x1="178" y1="86" x2="136" y2="120"/><line class="line" x1="178" y1="86" x2="224" y2="118"/><line class="line" x1="160" y1="132" x2="148" y2="182"/><line class="line" x1="200" y1="132" x2="214" y2="182"/><line class="line" x1="116" y1="184" x2="244" y2="184"/><circle class="head" cx="178" cy="40" r="18"/>` },
+      { name: 'Desk Chest Opener', duration: 40, instruction: 'Clasp hands behind your back or at your chair. Draw shoulders down, open the chest, and breathe slowly.', svg: `<line class="line" x1="180" y1="56" x2="180" y2="132"/><line class="line accent" x1="180" y1="90" x2="142" y2="126"/><line class="line accent" x1="180" y1="90" x2="218" y2="126"/><line class="line" x1="180" y1="132" x2="158" y2="184"/><line class="line" x1="180" y1="132" x2="206" y2="184"/><path class="line accent" d="M142 126 Q180 152 218 126"/><line class="line" x1="124" y1="186" x2="236" y2="186"/><circle class="head" cx="180" cy="36" r="18"/>` }
+    ];
+
+    const events = [
+      '🎧 Focus soundtrack bonus: +20 calm points.',
+      '☕ Coffee breath sync: streak protected this pose.',
+      '📵 Notification shield: gain +1 skip token.',
+      '🧘 Executive poise: +10 extra posture points.'
     ];
 
     const screens = {
@@ -455,10 +417,24 @@
     const timerEl = document.getElementById('timer');
     const progressFill = document.getElementById('progress-fill');
     const breathIndicator = document.getElementById('breath-indicator');
+    const focusEventEl = document.getElementById('focus-event');
+    const achievementStrip = document.getElementById('achievement-strip');
+    const finalSummary = document.getElementById('final-summary');
+
+    const scoreValue = document.getElementById('score-value');
+    const streakValue = document.getElementById('streak-value');
+    const levelValue = document.getElementById('level-value');
+    const skipValue = document.getElementById('skip-value');
+    const bestValue = document.getElementById('best-value');
+
     const startBtn = document.getElementById('start-btn');
     const restartBtn = document.getElementById('restart-btn');
     const pauseBtn = document.getElementById('pause-btn');
+    const skipBtn = document.getElementById('skip-btn');
     const liveAnnouncer = document.getElementById('live-announcer');
+
+    const bestScoreStorageKey = 'desk-yoga-best-score';
+    let bestScore = Number(localStorage.getItem(bestScoreStorageKey) || 0);
 
     let poseIndex = 0;
     let remaining = poses[0].duration;
@@ -467,8 +443,18 @@
     let breathId;
     let audioCtx;
 
+    const gameState = {
+      score: 0,
+      streak: 0,
+      level: 1,
+      skipTokens: 2,
+      completedPoses: 0,
+      usedSkip: false,
+      achievements: new Set()
+    };
+
     function showScreen(key) {
-      Object.values(screens).forEach(s => s.classList.remove('active'));
+      Object.values(screens).forEach(screen => screen.classList.remove('active'));
       screens[key].classList.add('active');
     }
 
@@ -476,6 +462,19 @@
       const m = Math.floor(totalSec / 60).toString().padStart(2, '0');
       const s = (totalSec % 60).toString().padStart(2, '0');
       return `${m}:${s}`;
+    }
+
+    function announce(message) {
+      liveAnnouncer.textContent = message;
+    }
+
+    function totalSessionSeconds() {
+      return poses.reduce((sum, pose) => sum + pose.duration, 0);
+    }
+
+    function elapsedSessionSeconds() {
+      const completed = poses.slice(0, poseIndex).reduce((sum, pose) => sum + pose.duration, 0);
+      return completed + (poses[Math.min(poseIndex, poses.length - 1)].duration - Math.max(remaining, 0));
     }
 
     function playChime() {
@@ -490,7 +489,7 @@
       const gain = ctx.createGain();
       gain.gain.setValueAtTime(0.0001, now);
       gain.gain.exponentialRampToValueAtTime(0.14, now + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
       gain.connect(ctx.destination);
 
       [587.33, 783.99].forEach((freq, i) => {
@@ -499,22 +498,50 @@
         osc.frequency.setValueAtTime(freq, now + i * 0.06);
         osc.connect(gain);
         osc.start(now + i * 0.06);
-        osc.stop(now + 1.1 + i * 0.06);
+        osc.stop(now + 0.9 + i * 0.06);
       });
-
     }
 
-    function announce(message) {
-      liveAnnouncer.textContent = message;
+    function updateHud() {
+      scoreValue.textContent = Math.round(gameState.score).toString();
+      streakValue.textContent = `x${Math.max(1, gameState.streak)}`;
+      levelValue.textContent = String(gameState.level);
+      skipValue.textContent = String(gameState.skipTokens);
+      bestValue.textContent = String(bestScore);
     }
 
-    function totalSessionSeconds() {
-      return poses.reduce((sum, pose) => sum + pose.duration, 0);
+    function maybeLevelUp() {
+      const nextLevel = Math.floor(gameState.score / 180) + 1;
+      if (nextLevel > gameState.level) {
+        gameState.level = nextLevel;
+        gameState.skipTokens += 1;
+        focusEventEl.textContent = `⬆️ Level ${gameState.level}! +1 skip token earned.`;
+        announce(`Level up. You are now level ${gameState.level}.`);
+        playChime();
+      }
     }
 
-    function elapsedSessionSeconds() {
-      const completed = poses.slice(0, poseIndex).reduce((sum, pose) => sum + pose.duration, 0);
-      return completed + (poses[poseIndex].duration - remaining);
+    function unlockAchievement(id, text) {
+      if (gameState.achievements.has(id)) {
+        return;
+      }
+      gameState.achievements.add(id);
+      achievementStrip.textContent = `🏅 ${text}`;
+      announce(text);
+    }
+
+    function rollFocusEvent() {
+      const trigger = Math.random() < 0.34;
+      if (!trigger) {
+        focusEventEl.textContent = '';
+        return;
+      }
+      const event = events[Math.floor(Math.random() * events.length)];
+      focusEventEl.textContent = event;
+      if (event.includes('bonus')) gameState.score += 20;
+      if (event.includes('skip token')) gameState.skipTokens += 1;
+      if (event.includes('extra posture')) gameState.score += 10;
+      updateHud();
     }
 
     function renderPose() {
@@ -523,10 +550,10 @@
       poseInstruction.textContent = pose.instruction;
       poseFigure.innerHTML = pose.svg;
       poseCount.textContent = `Pose ${poseIndex + 1} of ${poses.length}`;
-      timerEl.textContent = formatTime(remaining);
-      const sessionProgress = (elapsedSessionSeconds() / totalSessionSeconds()) * 100;
-      progressFill.style.width = `${sessionProgress}%`;
+      timerEl.textContent = formatTime(Math.max(remaining, 0));
+      progressFill.style.width = `${(elapsedSessionSeconds() / totalSessionSeconds()) * 100}%`;
       announce(`Now: ${pose.name}. ${pose.instruction}`);
+      rollFocusEvent();
     }
 
     function startBreathCycle() {
@@ -534,9 +561,7 @@
       let inhale = true;
       breathIndicator.dataset.phase = 'Inhale';
       breathId = setInterval(() => {
-        if (paused) {
-          return;
-        }
+        if (paused) return;
         inhale = !inhale;
         breathIndicator.dataset.phase = inhale ? 'Inhale' : 'Exhale';
       }, 4000);
@@ -553,27 +578,86 @@
       announce(paused ? 'Session paused.' : 'Session resumed.');
     }
 
-    function nextPose() {
+    function handleCompletedPose() {
+      gameState.completedPoses += 1;
+      gameState.streak += 1;
+      const poseBonus = 35 + (gameState.streak * 8);
+      gameState.score += poseBonus;
+
+      if (gameState.streak >= 3) {
+        unlockAchievement('streak3', 'Flow Master: 3-pose streak reached.');
+      }
+      if (!gameState.usedSkip && gameState.completedPoses >= 4) {
+        unlockAchievement('cleanRun', 'Steady Mind: 4 poses without using skip.');
+      }
+      maybeLevelUp();
+      updateHud();
+      playChime();
+    }
+
+    function completeRun() {
+      clearInterval(tickId);
+      clearInterval(breathId);
+      progressFill.style.width = '100%';
+      showScreen('end');
+
+      if (gameState.score > bestScore) {
+        bestScore = Math.round(gameState.score);
+        localStorage.setItem(bestScoreStorageKey, String(bestScore));
+        unlockAchievement('newBest', 'New personal best score.');
+      }
+
+      finalSummary.textContent = `Score ${Math.round(gameState.score)} • Level ${gameState.level} • Completed ${gameState.completedPoses}/${poses.length} poses • Best ${bestScore}.`;
+      announce('Session complete. Great work.');
+      playChime();
+      updateHud();
+    }
+
+    function nextPose(completed = true) {
+      if (completed) {
+        handleCompletedPose();
+      }
       poseIndex += 1;
       if (poseIndex >= poses.length) {
-        clearInterval(tickId);
-        clearInterval(breathId);
-        progressFill.style.width = '100%';
-        showScreen('end');
-        announce('Session complete. Great work.');
-        playChime();
+        completeRun();
         return;
       }
       remaining = poses[poseIndex].duration;
       renderPose();
-      playChime();
+    }
+
+    function useSkip() {
+      if (gameState.skipTokens <= 0) {
+        focusEventEl.textContent = 'No skip tokens left. Keep breathing and earn one by leveling up.';
+        return;
+      }
+      gameState.skipTokens -= 1;
+      gameState.usedSkip = true;
+      gameState.streak = Math.max(1, gameState.streak - 1);
+      gameState.score = Math.max(0, gameState.score - 18);
+      updateHud();
+      focusEventEl.textContent = '⏭️ Strategic skip used. Minor score tradeoff applied.';
+      nextPose(false);
     }
 
     function startSession() {
       poseIndex = 0;
       remaining = poses[0].duration;
       paused = false;
+
+      gameState.score = 0;
+      gameState.streak = 0;
+      gameState.level = 1;
+      gameState.skipTokens = 2;
+      gameState.completedPoses = 0;
+      gameState.usedSkip = false;
+      gameState.achievements.clear();
+
+      focusEventEl.textContent = '';
+      achievementStrip.textContent = '🏁 New run started. Stay steady to build streak bonus.';
+
       updatePauseButton();
+      updateHud();
       showScreen('pose');
       renderPose();
       startBreathCycle();
@@ -581,24 +665,27 @@
 
       clearInterval(tickId);
       tickId = setInterval(() => {
-        if (paused) {
-          return;
-        }
+        if (paused) return;
+
         remaining -= 1;
+        gameState.score += 2 + (gameState.streak * 0.6);
+        maybeLevelUp();
+
         timerEl.textContent = formatTime(Math.max(remaining, 0));
         progressFill.style.width = `${(elapsedSessionSeconds() / totalSessionSeconds()) * 100}%`;
+        updateHud();
+
         if (remaining <= 0) {
-          nextPose();
+          nextPose(true);
         }
       }, 1000);
     }
 
     pauseBtn.addEventListener('click', () => setPaused(!paused));
+    skipBtn.addEventListener('click', useSkip);
 
     document.addEventListener('keydown', (event) => {
-      if (!screens.pose.classList.contains('active')) {
-        return;
-      }
+      if (!screens.pose.classList.contains('active')) return;
 
       if (event.code === 'Space') {
         event.preventDefault();
@@ -607,7 +694,7 @@
 
       if (event.key.toLowerCase() === 'n') {
         event.preventDefault();
-        nextPose();
+        useSkip();
       }
     });
 
@@ -619,6 +706,7 @@
 
     startBtn.addEventListener('click', startSession);
     restartBtn.addEventListener('click', startSession);
+    updateHud();
   </script>
 </body>
 </html>
