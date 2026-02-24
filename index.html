@@ -124,6 +124,13 @@
     .btn:hover { transform: translateY(-2px); }
     .btn:active { transform: translateY(0); }
 
+    .btn.secondary {
+      color: var(--text);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: none;
+    }
+
     .top-row {
       display: flex;
       justify-content: space-between;
@@ -227,6 +234,12 @@
       flex-wrap: wrap;
     }
 
+    .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
     .pose-count { color: var(--muted); }
 
     .breath {
@@ -260,6 +273,26 @@
     }
 
     .center { text-align: center; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
 
     @media (max-width: 700px) {
       .app { border-radius: 22px; }
@@ -300,7 +333,11 @@
         </div>
         <div class="status-row">
           <span id="pose-count" class="pose-count"></span>
+          <div class="controls">
+            <button type="button" class="btn secondary" id="pause-btn" aria-pressed="false">Pause</button>
+          </div>
         </div>
+        <p id="live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></p>
       </div>
 
       <div id="end-screen" class="screen center">
@@ -420,11 +457,15 @@
     const breathIndicator = document.getElementById('breath-indicator');
     const startBtn = document.getElementById('start-btn');
     const restartBtn = document.getElementById('restart-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const liveAnnouncer = document.getElementById('live-announcer');
 
     let poseIndex = 0;
     let remaining = poses[0].duration;
+    let paused = false;
     let tickId;
     let breathId;
+    let audioCtx;
 
     function showScreen(key) {
       Object.values(screens).forEach(s => s.classList.remove('active'));
@@ -438,7 +479,13 @@
     }
 
     function playChime() {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const ctx = audioCtx;
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
       const now = ctx.currentTime;
       const gain = ctx.createGain();
       gain.gain.setValueAtTime(0.0001, now);
@@ -455,7 +502,19 @@
         osc.stop(now + 1.1 + i * 0.06);
       });
 
-      setTimeout(() => ctx.close(), 1700);
+    }
+
+    function announce(message) {
+      liveAnnouncer.textContent = message;
+    }
+
+    function totalSessionSeconds() {
+      return poses.reduce((sum, pose) => sum + pose.duration, 0);
+    }
+
+    function elapsedSessionSeconds() {
+      const completed = poses.slice(0, poseIndex).reduce((sum, pose) => sum + pose.duration, 0);
+      return completed + (poses[poseIndex].duration - remaining);
     }
 
     function renderPose() {
@@ -465,8 +524,9 @@
       poseFigure.innerHTML = pose.svg;
       poseCount.textContent = `Pose ${poseIndex + 1} of ${poses.length}`;
       timerEl.textContent = formatTime(remaining);
-      const sessionProgress = (poseIndex / poses.length) * 100;
+      const sessionProgress = (elapsedSessionSeconds() / totalSessionSeconds()) * 100;
       progressFill.style.width = `${sessionProgress}%`;
+      announce(`Now: ${pose.name}. ${pose.instruction}`);
     }
 
     function startBreathCycle() {
@@ -474,9 +534,23 @@
       let inhale = true;
       breathIndicator.dataset.phase = 'Inhale';
       breathId = setInterval(() => {
+        if (paused) {
+          return;
+        }
         inhale = !inhale;
         breathIndicator.dataset.phase = inhale ? 'Inhale' : 'Exhale';
       }, 4000);
+    }
+
+    function updatePauseButton() {
+      pauseBtn.textContent = paused ? 'Resume' : 'Pause';
+      pauseBtn.setAttribute('aria-pressed', String(paused));
+    }
+
+    function setPaused(nextState) {
+      paused = nextState;
+      updatePauseButton();
+      announce(paused ? 'Session paused.' : 'Session resumed.');
     }
 
     function nextPose() {
@@ -486,6 +560,7 @@
         clearInterval(breathId);
         progressFill.style.width = '100%';
         showScreen('end');
+        announce('Session complete. Great work.');
         playChime();
         return;
       }
@@ -497,6 +572,8 @@
     function startSession() {
       poseIndex = 0;
       remaining = poses[0].duration;
+      paused = false;
+      updatePauseButton();
       showScreen('pose');
       renderPose();
       startBreathCycle();
@@ -504,13 +581,41 @@
 
       clearInterval(tickId);
       tickId = setInterval(() => {
+        if (paused) {
+          return;
+        }
         remaining -= 1;
         timerEl.textContent = formatTime(Math.max(remaining, 0));
+        progressFill.style.width = `${(elapsedSessionSeconds() / totalSessionSeconds()) * 100}%`;
         if (remaining <= 0) {
           nextPose();
         }
       }, 1000);
     }
+
+    pauseBtn.addEventListener('click', () => setPaused(!paused));
+
+    document.addEventListener('keydown', (event) => {
+      if (!screens.pose.classList.contains('active')) {
+        return;
+      }
+
+      if (event.code === 'Space') {
+        event.preventDefault();
+        setPaused(!paused);
+      }
+
+      if (event.key.toLowerCase() === 'n') {
+        event.preventDefault();
+        nextPose();
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && screens.pose.classList.contains('active') && !paused) {
+        setPaused(true);
+      }
+    });
 
     startBtn.addEventListener('click', startSession);
     restartBtn.addEventListener('click', startSession);
